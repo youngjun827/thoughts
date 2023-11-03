@@ -1,3 +1,4 @@
+// Package logger provides support for initializing the log system.
 package logger
 
 import (
