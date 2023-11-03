@@ -2,11 +2,15 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"os"
 	"os/signal"
 	"runtime"
 	"syscall"
+	"time"
 
+	"github.com/ardanlabs/conf/v3"
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
@@ -44,6 +48,36 @@ func run(ctx context.Context, log *logger.Logger) error {
 	// GOMAXPROCS
 
 	log.Info(ctx, "startup", "GOMAXPROCS", runtime.GOMAXPROCS(0), "build", build)
+
+	// -------------------------------------------------------------------------
+	// Configuration
+
+	cfg := struct {
+		conf.Version
+		Web struct {
+			ReadTimeout     time.Duration `conf:"default:5s"`
+			WriteTimeout    time.Duration `conf:"default:10s"`
+			IdleTimeout     time.Duration `conf:"default:60s"`
+			ShutdownTimeout time.Duration `conf:"default:10s"`
+			APIHost         string        `conf:"default:0.0.0.0:3000"`
+			DebugHost       string        `conf:"default:0.0.0.0:4000"`
+		}
+	}{
+		Version: conf.Version{
+			Build: build,
+			Desc:  "YOUNG JUN JOO",
+		},
+	}
+
+	const prefix = "THOUGHTS"
+	help, err := conf.Parse(prefix, &cfg)
+	if err != nil {
+		if errors.Is(err, conf.ErrHelpWanted) {
+			fmt.Println(help)
+			return nil
+		}
+		return fmt.Errorf("parsing config: %w", err)
+	}
 
 	// -------------------------------------------------------------------------
 
