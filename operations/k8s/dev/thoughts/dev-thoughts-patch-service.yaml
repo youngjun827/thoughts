@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: thoughts-api
+  namespace: thoughts-system
+
+spec:
+  selector:
+    app: thoughts
+
+  type: ClusterIP
+
+  ports:
+  - name: thoughts-api
+    port: 3000
+    targetPort: thoughts-api
+  - name: thts-api-debug # Stands for thoughts-api-debug. Truncated due to K8s port name character limit.
+    port: 4000
+    targetPort: thts-api-debug # Stands for thoughts-api-debug. Truncated due to K8s port name character limit.

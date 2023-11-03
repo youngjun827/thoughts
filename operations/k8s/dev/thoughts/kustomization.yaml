@@ -4,6 +4,7 @@ resources:
 - ../../base/thoughts/
 patches:
 - path: ./dev-thoughts-patch-deploy.yaml
+- path: ./dev-thoughts-patch-service.yaml
 images:
 - name: service-image
   newName: youngjun827/service/thoughts-api
