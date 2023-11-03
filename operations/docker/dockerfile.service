@@ -7,7 +7,6 @@ COPY . /thoughts
 WORKDIR /thoughts/app/services/thoughts-api
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
-
 FROM alpine:3.18
 ARG BUILD_DATE
 ARG BUILD_REF
