@@ -20,12 +20,25 @@ PROMTAIL        := grafana/promtail:2.9.0
 
 KIND_CLUSTER    := youngjun827-starter-cluster
 NAMESPACE       := thoughts-system
-APP             := sales
-BASE_IMAGE_NAME := youngjun827/thoughts
+APP             := thoughts
+BASE_IMAGE_NAME := youngjun827/service
 SERVICE_NAME    := thoughts-api
 VERSION         := 0.0.1
 SERVICE_IMAGE   := $(BASE_IMAGE_NAME)/$(SERVICE_NAME):$(VERSION)
 METRICS_IMAGE   := $(BASE_IMAGE_NAME)/$(SERVICE_NAME)-metrics:$(VERSION)
+
+# ==============================================================================
+# Building containers
+
+all: service
+
+service:
+	docker build \
+		-f operations/docker/dockerfile.service \
+		-t $(SERVICE_IMAGE) \
+		--build-arg BUILD_REF=$(VERSION) \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		.
 
 # ==============================================================================
 # Running from within k8s/kind
@@ -40,6 +53,34 @@ dev-up:
 
 dev-down:
 	kind delete cluster --name $(KIND_CLUSTER)
+
+# ------------------------------------------------------------------------------
+
+dev-load:
+	cd operations/k8s/dev/thoughts; kustomize edit set image service-image=$(SERVICE_IMAGE)
+	kind load docker-image $(SERVICE_IMAGE) --name $(KIND_CLUSTER)
+
+dev-apply:
+	kustomize build operations/k8s/dev/thoughts | kubectl apply -f -
+	kubectl wait pods --namespace=$(NAMESPACE) --selector app=$(APP) --timeout=120s --for=condition=Ready
+
+dev-restart:
+	kubectl rollout restart deployment $(APP) --namespace=$(NAMESPACE)
+
+dev-update: all dev-load dev-restart
+
+dev-update-apply: all dev-load dev-apply
+
+# ------------------------------------------------------------------------------
+
+dev-logs:
+	kubectl logs --namespace=$(NAMESPACE) -l app=$(APP) --all-containers=true -f --tail=100 --max-log-requests=6 | go run app/tooling/logfmt/main.go -service=$(SERVICE_NAME)
+
+dev-describe-deployment:
+	kubectl describe deployment --namespace=$(NAMESPACE) $(APP)
+
+dev-describe-thoughts:
+	kubectl describe pod --namespace=$(NAMESPACE) -l app=$(APP)
 
 # ------------------------------------------------------------------------------
 

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thoughts
+  namespace: thoughts-system
+
+spec:
+  selector:
+    matchLabels:
+      app: thoughts
+
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      labels:
+        app: thoughts
+
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+
+      containers:
+      - name: thoughts-api
+        resources:
+          requests:
+            cpu: "500m" 
+          limits:
+            cpu: "500m" 
