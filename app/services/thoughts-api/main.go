@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
+	"github.com/youngjun827/thoughts/business/web/v1/debug"
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
@@ -98,7 +99,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 	go func() {
 		log.Info(ctx, "startup", "status", "debug v1 router started", "host", cfg.Web.DebugHost)
 
-		err := http.ListenAndServe(cfg.Web.DebugHost, http.DefaultServeMux)
+		err := http.ListenAndServe(cfg.Web.DebugHost, debug.Mux())
 		if err != nil {
 			log.Error(ctx, "shutdown", "status", "debug v1 router closed", "host", cfg.Web.DebugHost, "msg", err)
 		}
