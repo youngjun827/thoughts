@@ -1,3 +1,4 @@
+// Package response provides error handling utilities for handling API responses.
 package response
 
 import "errors"
