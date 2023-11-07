@@ -7,6 +7,9 @@ run:
 run-help:
 	go run app/services/thoughts-api/main.go --help | go run app/tooling/logfmt/main.go
 
+curl:
+	curl -il http://localhost:3000/hack
+
 # ==============================================================================
 # Define dependencies
 
@@ -104,3 +107,4 @@ metrics-view-sc:
 tidy:
 	go mod tidy
 	go mod vendor
+

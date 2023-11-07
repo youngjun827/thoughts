@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
+	"github.com/youngjun827/thoughts/app/services/thoughts-api/v1/handlers/handlers"
+	v1 "github.com/youngjun827/thoughts/business/web/v1"
 	"github.com/youngjun827/thoughts/business/web/v1/debug"
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
@@ -113,9 +115,17 @@ func run(ctx context.Context, log *logger.Logger) error {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
+	cfgMux := v1.APIMuxConfig{
+		Build:    build,
+		Shutdown: shutdown,
+		Log:      log,
+	}
+
+	apiMux := v1.APIMux(cfgMux, handlers.Routes{})
+
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      nil,
+		Handler:      apiMux,
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,
