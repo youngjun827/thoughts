@@ -1,4 +1,4 @@
-// Add all route groups.
+// Package handlers add all route groups.
 package handlers
 
 import (

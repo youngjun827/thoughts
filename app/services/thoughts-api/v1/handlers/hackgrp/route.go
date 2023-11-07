@@ -1,4 +1,4 @@
-// Routes adds specific routes for hackgrp.
+// Package hackgrp adds specific routes for hackgrp.
 package hackgrp
 
 import (
