@@ -1,3 +1,4 @@
+// Package mid provides middleware functions for managing HTTP requests and responses.
 package mid
 
 import (
