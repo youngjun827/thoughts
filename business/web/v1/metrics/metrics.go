@@ -1,3 +1,4 @@
+// Package metrics provides functionality for capturing and tracking metrics.
 package metrics
 
 import (
