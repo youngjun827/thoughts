@@ -1,3 +1,4 @@
+// Package web contains a small web framework extension to the Chi Router.
 package web
 
 import (

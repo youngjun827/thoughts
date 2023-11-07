@@ -1,3 +1,4 @@
+// Test Handler. Will be removed in production.
 package hackgrp
 
 import (

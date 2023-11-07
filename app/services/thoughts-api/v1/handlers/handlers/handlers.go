@@ -1,3 +1,4 @@
+// Add all route groups.
 package handlers
 
 import (
