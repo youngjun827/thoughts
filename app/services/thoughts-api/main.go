@@ -16,6 +16,7 @@ import (
 	v1 "github.com/youngjun827/thoughts/business/web/v1"
 	"github.com/youngjun827/thoughts/business/web/v1/debug"
 	"github.com/youngjun827/thoughts/foundation/logger"
+	"github.com/youngjun827/thoughts/foundation/web"
 )
 
 var build = "develop"
@@ -30,7 +31,7 @@ func main() {
 	}
 
 	traceIDFunc := func(ctx context.Context) string {
-		return ""
+		return web.GetTraceID(ctx)
 	}
 
 	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "THOUGHTS-API", traceIDFunc, events)

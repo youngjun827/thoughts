@@ -5,8 +5,10 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 )
 
 type Handler func(context.Context, http.ResponseWriter, *http.Request) error
@@ -41,6 +43,11 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
     wrappedHandler = wrapMiddleware(a.mw, wrappedHandler)
 
     customHandler := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+		v := Values{
+			TraceID: uuid.NewString(),
+			Now:     time.Now().UTC(),
+		}
+		ctx = SetValues(ctx, &v)
 		err := wrappedHandler(ctx, w, r)
         if err != nil {
             http.Error(w, "Internal Server Error", http.StatusInternalServerError)
