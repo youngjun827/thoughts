@@ -50,7 +50,6 @@ func HandlerAdapter(handler Handler) http.HandlerFunc {
     return func(w http.ResponseWriter, r *http.Request) {
         err := handler(r.Context(), w, r)
         if err != nil {
-            // Handle the error as needed
             http.Error(w, "Internal Server Error", http.StatusInternalServerError)
         }
     }
