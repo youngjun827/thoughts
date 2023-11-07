@@ -40,3 +40,7 @@ jobs:
       - name: Run govulncheck
         run: |
           govulncheck ./...
+
+      - name: Format code
+        run: | 
+          gofmt -w .
