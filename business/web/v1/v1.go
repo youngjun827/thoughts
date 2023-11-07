@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/youngjun827/thoughts/business/web/v1/mid"
 	"github.com/youngjun827/thoughts/foundation/logger"
 	"github.com/youngjun827/thoughts/foundation/web"
 )
@@ -20,7 +21,7 @@ type RouteAdder interface {
 }
 
 func APIMux(cfg APIMuxConfig, routeAdder RouteAdder) chi.Router {
-    app := web.NewApp(cfg.Shutdown)
+    app := web.NewApp(cfg.Shutdown, mid.Logger(cfg.Log))
 
     routeAdder.Add(app.Mux, cfg)
 
