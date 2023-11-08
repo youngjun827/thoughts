@@ -1,0 +1,16 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    uses: ./jobs/test.yaml
+
+  vet:
+    uses: ./jobs/vet.yaml
+
+  staticcheck:
+    uses: ./jobs/staticcheck.yaml
+
+  govulncheck:
+    uses: ./jobs/govulncheck.yaml
