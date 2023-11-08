@@ -4,6 +4,9 @@ github.com/ardanlabs/conf/v3
 # github.com/go-chi/chi/v5 v5.0.10
 ## explicit; go 1.14
 github.com/go-chi/chi/v5
+github.com/go-chi/chi/v5/middleware
+# github.com/google/go-cmp v0.6.0
+## explicit; go 1.13
 # github.com/google/uuid v1.4.0
 ## explicit
 github.com/google/uuid

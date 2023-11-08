@@ -10,28 +10,54 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
 )
 
-type Handler func(context.Context, http.ResponseWriter, *http.Request) error
+type Handler func(ctx context.Context, w http.ResponseWriter, r *http.Request) error
 
 type App struct {
-    Mux *chi.Mux
-    shutdown chan os.Signal
-	mw []Middleware
+	*chi.Mux
+	shutdown chan os.Signal
+	mw       []Middleware
 }
 
 func NewApp(shutdown chan os.Signal, mw ...Middleware) *App {
-    r := chi.NewRouter()
-    return &App{
-        Mux:      r,
-        shutdown: shutdown,
-		mw: mw,
-    }
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	return &App{
+		Mux:      r,
+		shutdown: shutdown,
+		mw:       mw,
+	}
 }
 
 func (a *App) SignalShutdown() {
 	a.shutdown <- syscall.SIGTERM
+}
+
+func (a *App) Handle(method string, path string, handler Handler, mw ...Middleware) {
+	handler = wrapMiddleware(mw, handler)
+	handler = wrapMiddleware(a.mw, handler)
+
+	h := func(w http.ResponseWriter, r *http.Request) {
+		v := Values{
+			TraceID: uuid.NewString(),
+			Now:     time.Now().UTC(),
+		}
+		ctx := SetValues(r.Context(), &v)
+
+		if err := handler(ctx, w, r); err != nil {
+			if validateShutdown(err) {
+				a.SignalShutdown()
+				return
+			}
+		}
+	}
+
+	a.Mux.MethodFunc(method, path, h)
 }
 
 func validateShutdown(err error) bool {
@@ -45,37 +71,3 @@ func validateShutdown(err error) bool {
 
 	return true
 }
-
-func HandlerAdapter(handler Handler) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        err := handler(r.Context(), w, r)
-        if err != nil {
-            http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-        }
-    }
-}
-
-func (a *App) Handle(method string, path string, handler Handler, mw ...Middleware) {
-    wrappedHandler := wrapMiddleware(mw, handler)
-    wrappedHandler = wrapMiddleware(a.mw, wrappedHandler)
-
-    customHandler := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-		v := Values{
-			TraceID: uuid.NewString(),
-			Now:     time.Now().UTC(),
-		}
-		ctx = SetValues(ctx, &v)
-		err := wrappedHandler(ctx, w, r)
-        if err != nil {
-			if validateShutdown(err) {
-				a.SignalShutdown()
-				return err
-			}
-        }
-        return nil
-    }
-
-    a.Mux.MethodFunc(method, path, HandlerAdapter(customHandler))
-}
-
-
