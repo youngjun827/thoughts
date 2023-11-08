@@ -4,13 +4,13 @@ on: [push, pull_request]
 
 jobs:
   test:
-    uses: ./jobs/test.yaml
+    uses: ./jobs/test.yml
 
   vet:
-    uses: ./jobs/vet.yaml
+    uses: ./jobs/vet.yml
 
   staticcheck:
-    uses: ./jobs/staticcheck.yaml
+    uses: ./jobs/staticcheck.yml
 
   govulncheck:
-    uses: ./jobs/govulncheck.yaml
+    uses: ./jobs/govulncheck.yml
