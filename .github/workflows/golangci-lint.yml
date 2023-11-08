@@ -19,6 +19,8 @@ jobs:
         with:
           go-version: '1.21'
           cache: false
+      - name: Copy .golangci.yml
+        run: cp .github/workflows/.golangci.yml $GITHUB_WORKSPACE/.golangci.yml
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
