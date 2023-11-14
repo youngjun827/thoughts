@@ -8,5 +8,6 @@ import (
 )
 
 func Routes(app *web.App) {
-	app.Handle(http.MethodGet, "/hack", Hack)
+	const version = "v1"
+	app.Handle(http.MethodGet, version, "/hack", Hack)
 }
