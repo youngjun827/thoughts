@@ -50,4 +50,4 @@ metadata:
   
 spec:
   selector:
-    app: sales
+    app: thoughts
