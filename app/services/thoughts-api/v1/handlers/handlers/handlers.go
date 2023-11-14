@@ -10,7 +10,6 @@ import (
 
 type Routes struct{}
 
-// Add implements the RouterAdder interface to add all routes.
 func (Routes) Add(app *web.App, apiCfg v1.APIMuxConfig) {
 	hackgrp.Routes(app)
 
