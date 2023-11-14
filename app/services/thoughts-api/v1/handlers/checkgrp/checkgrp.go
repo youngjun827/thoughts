@@ -6,21 +6,24 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/youngjun827/thoughts/foundation/logger"
 	"github.com/youngjun827/thoughts/foundation/web"
 )
 
 type Handlers struct {
 	build string
+	log *logger.Logger
 }
 
-func New(build string) *Handlers {
+func New(build string, log *logger.Logger) *Handlers {
 	return &Handlers{
 		build: build,
+		log: log,
 	}
 }
 
 func (h *Handlers) Readiness(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	status := "ok"
+	status := "OK"
 	statusCode := http.StatusOK
 
 	data := struct {
@@ -28,6 +31,8 @@ func (h *Handlers) Readiness(ctx context.Context, w http.ResponseWriter, r *http
 	}{
 		Status: status,
 	}
+
+	h.log.Info(ctx, "readiness", "status", status)
 
 	return web.Respond(ctx, w, data, statusCode)
 }
@@ -57,6 +62,8 @@ func (h *Handlers) Liveness(ctx context.Context, w http.ResponseWriter, r *http.
 		Namespace:  os.Getenv("KUBERNETES_NAMESPACE"),
 		GOMAXPROCS: os.Getenv("GOMAXPROCS"),
 	}
+
+	h.log.Info(ctx, "liveness", "status", "OK")
 
 	return web.Respond(ctx, w, data, http.StatusOK)
 }
