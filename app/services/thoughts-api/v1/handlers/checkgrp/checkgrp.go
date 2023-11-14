@@ -1,3 +1,4 @@
+// Package checkgrp adds specific routes for checking app status in k8s.
 package checkgrp
 
 import (
