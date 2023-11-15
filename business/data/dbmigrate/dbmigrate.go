@@ -1,3 +1,4 @@
+// Package dbmigrate provides support for database migrations and seeding.
 package dbmigrate
 
 import (

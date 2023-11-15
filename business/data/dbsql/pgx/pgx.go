@@ -12,10 +12,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+/*
 const (
 	uniqueViolation = "23505"
 	undefinedTable  = "42P01"
 )
+*/
 
 var (
 	ErrDBNotFound        = sql.ErrNoRows
