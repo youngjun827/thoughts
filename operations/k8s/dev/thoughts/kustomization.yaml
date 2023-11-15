@@ -9,3 +9,6 @@ images:
 - name: service-image
   newName: youngjun827/service/thoughts-api
   newTag: 0.0.1
+- name: thoughts-image
+  newName: youngjun827/service/thoughts-api
+  newTag: 0.0.1

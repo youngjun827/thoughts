@@ -1,25 +1,28 @@
+# Build the Go Binary.
 FROM golang:1.21.4 as build_thoughts-api
 ENV CGO_ENABLED 0
 ARG BUILD_REF
 
+# Copy the source code into the container.
 COPY . /thoughts
 
+# Build the admin binary.
+WORKDIR /thoughts/app/tooling/thoughts-admin
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
+# Build the service binary.
 WORKDIR /thoughts/app/services/thoughts-api
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
+
+# Run the Go Binary in Alpine.
 FROM alpine:3.18
 ARG BUILD_DATE
 ARG BUILD_REF
 RUN addgroup -g 1000 -S thoughts && \
     adduser -u 1000 -h /thoughts -G thoughts -S thoughts
+COPY --from=build_thoughts-api --chown=thoughts:thoughts /thoughts/app/tooling/thoughts-admin/thoughts-admin /thoughts/thoughts-admin
 COPY --from=build_thoughts-api --chown=thoughts:thoughts /thoughts/app/services/thoughts-api/thoughts-api /thoughts/thoughts-api
 WORKDIR /thoughts
 USER thoughts
 CMD ["./thoughts-api"]
-
-LABEL org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.title="thoughts-api" \
-      org.opencontainers.image.authors="Young Jun Joo <youngjunjoo827@gmail.com>" \
-      org.opencontainers.image.source="https://github.com/youngjun827/thoughts" \
-      org.opencontainers.image.revision="${BUILD_REF}" \
-      org.opencontainers.image.vendor="Young Jun Joo"
