@@ -5,7 +5,10 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/jmoiron/sqlx"
+	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
 	"github.com/youngjun827/thoughts/foundation/logger"
 	"github.com/youngjun827/thoughts/foundation/web"
 )
@@ -13,18 +16,29 @@ import (
 type Handlers struct {
 	build string
 	log *logger.Logger
+	db *sqlx.DB
 }
 
-func New(build string, log *logger.Logger) *Handlers {
+func New(build string, log *logger.Logger, db *sqlx.DB) *Handlers {
 	return &Handlers{
 		build: build,
 		log: log,
+		db: db,
 	}
 }
 
 func (h *Handlers) Readiness(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Second)
+	defer cancel()
+
 	status := "OK"
 	statusCode := http.StatusOK
+	err := db.StatusCheck(ctx, h.db)
+	if err != nil {
+		status = "db not ready"
+		statusCode = http.StatusInternalServerError
+		h.log.Info(ctx, "readiness failure", "status", status)
+	}
 
 	data := struct {
 		Status string `json:"status"`
