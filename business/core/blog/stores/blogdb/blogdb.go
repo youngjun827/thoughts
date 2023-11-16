@@ -1,3 +1,4 @@
+// Package blogdb provides a sqlx queries support for bloggrp.
 package blogdb
 
 import (

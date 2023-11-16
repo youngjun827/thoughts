@@ -1,3 +1,4 @@
+// Package bloggrp adds specific routes for CRUD operations related to blogs.
 package bloggrp
 
 import (
