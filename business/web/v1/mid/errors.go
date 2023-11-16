@@ -6,6 +6,7 @@ import (
 
 	"github.com/youngjun827/thoughts/business/web/v1/response"
 	"github.com/youngjun827/thoughts/foundation/logger"
+	"github.com/youngjun827/thoughts/foundation/validate"
 	"github.com/youngjun827/thoughts/foundation/web"
 )
 
@@ -21,6 +22,15 @@ func Errors(log *logger.Logger) web.Middleware {
 				switch {
 				case response.IsError(err):
 					reqErr := response.GetError(err)
+					if validate.IsFieldErrors(reqErr.Err) {
+						fieldErrors := validate.GetFieldErrors(reqErr.Err)
+						er = response.ErrorDocument{
+							Error:  "data validation error",
+							Fields: fieldErrors.Fields(),
+						}
+						status = reqErr.Status
+						break
+					}
 					er = response.ErrorDocument{
 						Error: reqErr.Error(),
 					}

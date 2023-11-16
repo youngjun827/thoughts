@@ -5,19 +5,23 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/url"
+	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
+	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
-/*
+
 const (
 	uniqueViolation = "23505"
 	undefinedTable  = "42P01"
 )
-*/
+
 
 var (
 	ErrDBNotFound        = sql.ErrNoRows
@@ -93,4 +97,55 @@ func StatusCheck(ctx context.Context, db *sqlx.DB) error {
 	const q = `SELECT true`
 	var tmp bool
 	return db.QueryRowContext(ctx, q).Scan(&tmp)
+}
+
+func NamedExecContext(ctx context.Context, log *logger.Logger, db sqlx.ExtContext, query string, data any) error {
+	q := queryString(query, data)
+
+	if _, ok := data.(struct{}); ok {
+		log.Infoc(ctx, 5, "database.NamedExecContext", "query", q)
+	} else {
+		log.Infoc(ctx, 4, "database.NamedExecContext", "query", q)
+	}
+
+	if _, err := sqlx.NamedExecContext(ctx, db, query, data); err != nil {
+		if pqerr, ok := err.(*pgconn.PgError); ok {
+			switch pqerr.Code {
+			case undefinedTable:
+				return ErrUndefinedTable
+			case uniqueViolation:
+				return ErrDBDuplicatedEntry
+			}
+		}
+		return err
+	}
+
+	return nil
+}
+
+// =============================================================================
+
+func queryString(query string, args any) string {
+	query, params, err := sqlx.Named(query, args)
+	if err != nil {
+		return err.Error()
+	}
+
+	for _, param := range params {
+		var value string
+		switch v := param.(type) {
+		case string:
+			value = fmt.Sprintf("'%s'", v)
+		case []byte:
+			value = fmt.Sprintf("'%s'", string(v))
+		default:
+			value = fmt.Sprintf("%v", v)
+		}
+		query = strings.Replace(query, "?", value, 1)
+	}
+
+	query = strings.ReplaceAll(query, "\t", "")
+	query = strings.ReplaceAll(query, "\n", " ")
+
+	return strings.Trim(query, " ")
 }

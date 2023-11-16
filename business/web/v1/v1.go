@@ -4,6 +4,7 @@ package v1
 import (
 	"os"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/youngjun827/thoughts/business/web/v1/mid"
 	"github.com/youngjun827/thoughts/foundation/logger"
 	"github.com/youngjun827/thoughts/foundation/web"
@@ -13,6 +14,7 @@ type APIMuxConfig struct {
 	Build    string
 	Shutdown chan os.Signal
 	Log      *logger.Logger
+	DB 		 *sqlx.DB
 }
 type RouteAdder interface {
 	Add(app *web.App, cfg APIMuxConfig)

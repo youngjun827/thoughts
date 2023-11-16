@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"expvar"
 	"fmt"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/ardanlabs/conf/v3"
 	"github.com/youngjun827/thoughts/app/services/thoughts-api/v1/handlers/handlers"
+	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
 	v1 "github.com/youngjun827/thoughts/business/web/v1"
 	"github.com/youngjun827/thoughts/business/web/v1/debug"
 	"github.com/youngjun827/thoughts/foundation/logger"
@@ -67,6 +69,15 @@ func run(ctx context.Context, log *logger.Logger) error {
 			APIHost         string        `conf:"default:0.0.0.0:3000"`
 			DebugHost       string        `conf:"default:0.0.0.0:4000"`
 		}
+		DB struct {
+			User         string `conf:"default:postgres"`
+			Password     string `conf:"default:postgres,mask"`
+			Host         string `conf:"default:database-thoughts.thoughts-system.svc.cluster.local"`
+			Name         string `conf:"default:postgres"`
+			MaxIdleConns int    `conf:"default:2"`
+			MaxOpenConns int    `conf:"default:0"`
+			DisableTLS   bool   `conf:"default:true"`
+		}
 	}{
 		Version: conf.Version{
 			Build: build,
@@ -96,6 +107,8 @@ func run(ctx context.Context, log *logger.Logger) error {
 	}
 	log.Info(ctx, "startup", "config", out)
 
+	expvar.NewString("build").Set(build)
+
 	// -------------------------------------------------------------------------
 	// Start Debug Service
 
@@ -106,6 +119,28 @@ func run(ctx context.Context, log *logger.Logger) error {
 		if err != nil {
 			log.Error(ctx, "shutdown", "status", "debug v1 router closed", "host", cfg.Web.DebugHost, "msg", err)
 		}
+	}()
+
+	// -------------------------------------------------------------------------
+	// Database Support
+
+	log.Info(ctx, "startup", "status", "initializing database support", "host", cfg.DB.Host)
+
+	db, err := db.Open(db.Config{
+		User:         cfg.DB.User,
+		Password:     cfg.DB.Password,
+		Host:         cfg.DB.Host,
+		Name:         cfg.DB.Name,
+		MaxIdleConns: cfg.DB.MaxIdleConns,
+		MaxOpenConns: cfg.DB.MaxOpenConns,
+		DisableTLS:   cfg.DB.DisableTLS,
+	})
+	if err != nil {
+		return fmt.Errorf("connecting to db: %w", err)
+	}
+	defer func() {
+		log.Info(ctx, "shutdown", "status", "stopping database support", "host", cfg.DB.Host)
+		db.Close()
 	}()
 
 	// -------------------------------------------------------------------------
@@ -120,6 +155,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 		Build:    build,
 		Shutdown: shutdown,
 		Log:      log,
+		DB:		  db,
 	}
 
 	apiMux := v1.APIMux(cfgMux, handlers.Routes{})
