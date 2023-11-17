@@ -32,10 +32,10 @@ func (h *Handlers) Create(ctx context.Context, w http.ResponseWriter, r *http.Re
 		return response.NewError(err, http.StatusBadRequest)
 	}
 
-	usr, err := h.blog.Create(ctx, nc)
+	blg, err := h.blog.Create(ctx, nc)
 	if err != nil {
-		return fmt.Errorf("create: blog[%+v]: %w", usr, err)
+		return fmt.Errorf("create: blog[%+v]: %w", blg, err)
 	}
 
-	return web.Respond(ctx, w, toAppBlog(usr), http.StatusCreated)
+	return web.Respond(ctx, w, toAppBlog(blg), http.StatusCreated)
 }
