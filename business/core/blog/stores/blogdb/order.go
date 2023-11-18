@@ -8,10 +8,10 @@ import (
 )
 
 var orderByFields = map[string]string{
-	blog.OrderByPostID:      "post_id",
+	blog.OrderByPostID:   "post_id",
 	blog.OrderByTitle:    "title",
-	blog.OrderByCategory:   "category",
-	blog.OrderByEnabled: "enabled",
+	blog.OrderByCategory: "category",
+	blog.OrderByEnabled:  "enabled",
 }
 
 func orderByClause(orderBy order.By) (string, error) {

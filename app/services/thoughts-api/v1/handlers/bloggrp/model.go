@@ -29,7 +29,6 @@ func toAppBlog(blog blog.Blog) AppBlog {
 	}
 }
 
-
 func toAppBlogs(blogs []blog.Blog) []AppBlog {
 	items := make([]AppBlog, len(blogs))
 	for i, usr := range blogs {

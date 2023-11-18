@@ -43,8 +43,6 @@ func (h *Handlers) Create(ctx context.Context, w http.ResponseWriter, r *http.Re
 	return web.Respond(ctx, w, toAppBlog(blg), http.StatusCreated)
 }
 
-
-// Query returns a list of users with paging.
 func (h *Handlers) Query(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	page, err := page.Parse(r)
 	if err != nil {

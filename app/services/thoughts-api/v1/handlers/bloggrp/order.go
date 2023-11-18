@@ -11,17 +11,17 @@ import (
 
 func parseOrder(r *http.Request) (order.By, error) {
 	const (
-		orderByPostID      = "post_id"
+		orderByPostID   = "post_id"
 		orderByTitle    = "title"
-		orderByCategory   = "category"
-		orderByEnabled = "enabled"
+		orderByCategory = "category"
+		orderByEnabled  = "enabled"
 	)
 
 	var orderByFields = map[string]string{
-		orderByPostID:      blog.OrderByPostID,
+		orderByPostID:   blog.OrderByPostID,
 		orderByTitle:    blog.OrderByTitle,
-		orderByCategory:   blog.OrderByCategory,
-		orderByEnabled: blog.OrderByEnabled,
+		orderByCategory: blog.OrderByCategory,
+		orderByEnabled:  blog.OrderByEnabled,
 	}
 
 	orderBy, err := order.Parse(r, order.NewBy(orderByPostID, order.ASC))

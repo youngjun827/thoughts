@@ -41,7 +41,6 @@ func (s *Store) Create(ctx context.Context, blog blog.Blog) error {
 	return nil
 }
 
-// Query retrieves a list of existing users from the database.
 func (s *Store) Query(ctx context.Context, filter blog.QueryFilter, orderBy order.By, pageNumber int, rowsPerPage int) ([]blog.Blog, error) {
 	data := map[string]interface{}{
 		"offset":        (pageNumber - 1) * rowsPerPage,
@@ -78,7 +77,6 @@ func (s *Store) Query(ctx context.Context, filter blog.QueryFilter, orderBy orde
 	return blgs, nil
 }
 
-// Count returns the total number of users in the DB.
 func (s *Store) Count(ctx context.Context, filter blog.QueryFilter) (int, error) {
 	data := map[string]interface{}{}
 

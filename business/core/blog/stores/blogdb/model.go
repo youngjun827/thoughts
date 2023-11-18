@@ -29,16 +29,15 @@ func toDBBlog(blog blog.Blog) dbBlog {
 	}
 }
 
-
 func toCoreBlog(dbBlog dbBlog) (blog.Blog, error) {
 	blog := blog.Blog{
-		PostID:			dbBlog.PostID,
-		Title:          dbBlog.Title,
-		Content:        dbBlog.Content,
-		Category:		dbBlog.Category,
-		Enabled:        dbBlog.Enabled,
-		DateCreated:    dbBlog.DateCreated.In(time.Local),
-		DateUpdated:    dbBlog.DateUpdated.In(time.Local),
+		PostID:      dbBlog.PostID,
+		Title:       dbBlog.Title,
+		Content:     dbBlog.Content,
+		Category:    dbBlog.Category,
+		Enabled:     dbBlog.Enabled,
+		DateCreated: dbBlog.DateCreated.In(time.Local),
+		DateUpdated: dbBlog.DateUpdated.In(time.Local),
 	}
 
 	return blog, nil

@@ -13,7 +13,7 @@ func parseFilter(r *http.Request) (blog.QueryFilter, error) {
 	const (
 		filterByPostID           = "post_id"
 		filterByTitle            = "title"
-		filterByCategory            = "category"
+		filterByCategory         = "category"
 		filterByStartCreatedDate = "start_created_date"
 	)
 

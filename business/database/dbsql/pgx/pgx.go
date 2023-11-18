@@ -125,8 +125,6 @@ func NamedExecContext(ctx context.Context, log *logger.Logger, db sqlx.ExtContex
 	return nil
 }
 
-// NamedQueryStruct is a helper function for executing queries that return a
-// single value to be unmarshalled into a struct type where field replacement is necessary.
 func NamedQueryStruct(ctx context.Context, log *logger.Logger, db sqlx.ExtContext, query string, data any, dest any) error {
 	return namedQueryStruct(ctx, log, db, query, data, dest, false)
 }
@@ -179,9 +177,6 @@ func namedQueryStruct(ctx context.Context, log *logger.Logger, db sqlx.ExtContex
 	return nil
 }
 
-// NamedQuerySlice is a helper function for executing queries that return a
-// collection of data to be unmarshalled into a slice where field replacement is
-// necessary.
 func NamedQuerySlice[T any](ctx context.Context, log *logger.Logger, db sqlx.ExtContext, query string, data any, dest *[]T) error {
 	return namedQuerySlice(ctx, log, db, query, data, dest, false)
 }

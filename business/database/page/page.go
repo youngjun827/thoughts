@@ -8,14 +8,11 @@ import (
 	"github.com/youngjun827/thoughts/foundation/validate"
 )
 
-// Page represents the requested page and rows per page.
 type Page struct {
 	Number      int
 	RowsPerPage int
 }
 
-// Parse parses the request for the page and rows query string. The
-// defaults are provided as well.
 func Parse(r *http.Request) (Page, error) {
 	values := r.URL.Query()
 
