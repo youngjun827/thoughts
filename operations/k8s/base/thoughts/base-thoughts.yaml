@@ -27,7 +27,7 @@ spec:
       initContainers:
       - name: init-migrate
         image: thoughts-image
-        command: ['./thoughts-admin']
+        command: ['./thoughts-init']
         env:
         - name: THOUGHTS_DB_USER
           valueFrom:

@@ -7,7 +7,7 @@ ARG BUILD_REF
 COPY . /thoughts
 
 # Build the admin binary.
-WORKDIR /thoughts/app/tooling/thoughts-admin
+WORKDIR /thoughts/app/tooling/thoughts-init
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
 # Build the service binary.
@@ -21,7 +21,7 @@ ARG BUILD_DATE
 ARG BUILD_REF
 RUN addgroup -g 1000 -S thoughts && \
     adduser -u 1000 -h /thoughts -G thoughts -S thoughts
-COPY --from=build_thoughts-api --chown=thoughts:thoughts /thoughts/app/tooling/thoughts-admin/thoughts-admin /thoughts/thoughts-admin
+COPY --from=build_thoughts-api --chown=thoughts:thoughts /thoughts/app/tooling/thoughts-init/thoughts-init /thoughts/thoughts-init
 COPY --from=build_thoughts-api --chown=thoughts:thoughts /thoughts/app/services/thoughts-api/thoughts-api /thoughts/thoughts-api
 WORKDIR /thoughts
 USER thoughts
