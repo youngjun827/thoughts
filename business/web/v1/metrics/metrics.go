@@ -38,7 +38,8 @@ func Set(ctx context.Context) context.Context {
 }
 
 func AddGoroutines(ctx context.Context) int64 {
-	if v, ok := ctx.Value(key).(*metrics); ok {
+	v, ok := ctx.Value(key).(*metrics)
+	if ok {
 		if v.requests.Value()%100 == 0 {
 			g := int64(runtime.NumGoroutine())
 			v.goroutines.Set(g)
@@ -60,7 +61,8 @@ func AddRequests(ctx context.Context) int64 {
 }
 
 func AddErrors(ctx context.Context) int64 {
-	if v, ok := ctx.Value(key).(*metrics); ok {
+	v, ok := ctx.Value(key).(*metrics)
+	if ok {
 		v.errors.Add(1)
 		return v.errors.Value()
 	}
@@ -69,7 +71,8 @@ func AddErrors(ctx context.Context) int64 {
 }
 
 func AddPanics(ctx context.Context) int64 {
-	if v, ok := ctx.Value(key).(*metrics); ok {
+	v, ok := ctx.Value(key).(*metrics)
+	if ok {
 		v.panics.Add(1)
 		return v.panics.Value()
 	}

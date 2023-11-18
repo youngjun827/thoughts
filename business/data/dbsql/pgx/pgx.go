@@ -72,7 +72,8 @@ func Open(cfg Config) (*sqlx.DB, error) {
 }
 
 func StatusCheck(ctx context.Context, db *sqlx.DB) error {
-	if _, ok := ctx.Deadline(); !ok {
+	_, ok := ctx.Deadline()
+	if !ok {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, time.Second)
 		defer cancel()
@@ -102,14 +103,17 @@ func StatusCheck(ctx context.Context, db *sqlx.DB) error {
 func NamedExecContext(ctx context.Context, log *logger.Logger, db sqlx.ExtContext, query string, data any) error {
 	q := queryString(query, data)
 
-	if _, ok := data.(struct{}); ok {
+	_, ok := data.(struct{})
+	if ok {
 		log.Infoc(ctx, 5, "database.NamedExecContext", "query", q)
 	} else {
 		log.Infoc(ctx, 4, "database.NamedExecContext", "query", q)
 	}
 
-	if _, err := sqlx.NamedExecContext(ctx, db, query, data); err != nil {
-		if pqerr, ok := err.(*pgconn.PgError); ok {
+	_, err := sqlx.NamedExecContext(ctx, db, query, data)
+	if err != nil {
+		pqerr, ok := err.(*pgconn.PgError)
+		if ok {
 			switch pqerr.Code {
 			case undefinedTable:
 				return ErrUndefinedTable

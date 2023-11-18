@@ -24,7 +24,8 @@ var (
 )
 
 func Migrate(ctx context.Context, db *sqlx.DB) error {
-	if err := database.StatusCheck(ctx, db); err != nil {
+	err := database.StatusCheck(ctx, db)
+	if err != nil {
 		return fmt.Errorf("status check database: %w", err)
 	}
 
@@ -38,7 +39,8 @@ func Migrate(ctx context.Context, db *sqlx.DB) error {
 }
 
 func Seed(ctx context.Context, db *sqlx.DB) (err error) {
-	if err := database.StatusCheck(ctx, db); err != nil {
+	err = database.StatusCheck(ctx, db)
+	if err != nil {
 		return fmt.Errorf("status check database: %w", err)
 	}
 
@@ -48,7 +50,8 @@ func Seed(ctx context.Context, db *sqlx.DB) (err error) {
 	}
 
 	defer func() {
-		if errTx := tx.Rollback(); errTx != nil {
+		errTx := tx.Rollback()
+		if errTx != nil {
 			if errors.Is(errTx, sql.ErrTxDone) {
 				return
 			}
@@ -57,11 +60,13 @@ func Seed(ctx context.Context, db *sqlx.DB) (err error) {
 		}
 	}()
 
-	if _, err := tx.Exec(seedDoc); err != nil {
+	_, err = tx.Exec(seedDoc)
+	if err != nil {
 		return fmt.Errorf("exec: %w", err)
 	}
 
-	if err := tx.Commit(); err != nil {
+	err = tx.Commit()
+	if err != nil {
 		return fmt.Errorf("commit: %w", err)
 	}
 

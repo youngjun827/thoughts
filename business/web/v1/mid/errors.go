@@ -13,7 +13,8 @@ import (
 func Errors(log *logger.Logger) web.Middleware {
 	m := func(handler web.Handler) web.Handler {
 		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-			if err := handler(ctx, w, r); err != nil {
+			err := handler(ctx, w, r)
+			if err != nil {
 				log.Error(ctx, "message", "msg", err)
 
 				var er response.ErrorDocument
@@ -43,7 +44,8 @@ func Errors(log *logger.Logger) web.Middleware {
 					status = http.StatusInternalServerError
 				}
 
-				if err := web.Respond(ctx, w, er, status); err != nil {
+				err := web.Respond(ctx, w, er, status)
+				if err != nil {
 					return err
 				}
 

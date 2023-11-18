@@ -15,7 +15,8 @@ func Panics() web.Middleware {
 		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) (err error) {
 
 			defer func() {
-				if rec := recover(); rec != nil {
+				rec := recover()
+				if rec != nil {
 					trace := debug.Stack()
 					err = fmt.Errorf("PANIC [%v] TRACE[%s]", rec, string(trace))
 					metrics.AddPanics(ctx)

@@ -19,8 +19,8 @@ type Config struct {
 func Routes(app *web.App, cfg Config) {
 	const version = "v1"
 
-	usrCore := blog.NewCore(cfg.Log, blogdb.NewStore(cfg.Log, cfg.DB))
+	blgCore := blog.NewCore(cfg.Log, blogdb.NewStore(cfg.Log, cfg.DB))
 
-	hdl := New(usrCore)
+	hdl := New(blgCore)
 	app.Handle(http.MethodPost, version, "/blogs", hdl.Create)
 }

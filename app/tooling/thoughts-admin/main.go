@@ -64,7 +64,8 @@ func migrateSeed() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	if err := dbmigrate.Migrate(ctx, db); err != nil {
+	err = dbmigrate.Migrate(ctx, db)
+	if err != nil {
 		return fmt.Errorf("migrate database: %w", err)
 	}
 
@@ -72,7 +73,8 @@ func migrateSeed() error {
 
 	// -------------------------------------------------------------------------
 
-	if err := dbmigrate.Seed(ctx, db); err != nil {
+	err = dbmigrate.Seed(ctx, db)
+	if err != nil {
 		return fmt.Errorf("seed database: %w", err)
 	}
 

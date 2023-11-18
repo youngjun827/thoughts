@@ -57,7 +57,8 @@ func (a *App) handle(method string, group string, path string, handler Handler) 
 		}
 		ctx := SetValues(r.Context(), &v)
 
-		if err := handler(ctx, w, r); err != nil {
+		err := handler(ctx, w, r)
+		if err != nil {
 			if validateShutdown(err) {
 				a.SignalShutdown()
 				return

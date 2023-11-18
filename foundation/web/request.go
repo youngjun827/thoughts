@@ -13,12 +13,14 @@ type validator interface {
 func Decode(r *http.Request, val any) error {
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(val); err != nil {
+	err := decoder.Decode(val)
+	if err != nil {
 		return fmt.Errorf("unable to decode payload: %w", err)
 	}
 
 	if v, ok := val.(validator); ok {
-		if err := v.Validate(); err != nil {
+		err := v.Validate()
+		if err != nil {
 			return fmt.Errorf("unable to validate payload: %w", err)
 		}
 	}

@@ -40,7 +40,8 @@ func main() {
 		}
 
 		traceID := "00000000-0000-0000-0000-000000000000"
-		if v, ok := m["trace_id"]; ok {
+		v, ok := m["trace_id"]
+		if ok {
 			traceID = fmt.Sprintf("%v", v)
 		}
 
@@ -67,7 +68,8 @@ func main() {
 		fmt.Println(out[:len(out)-2])
 	}
 
-	if err := scanner.Err(); err != nil {
+	err := scanner.Err()
+	if err != nil {
 		log.Println(err)
 	}
 }

@@ -33,7 +33,8 @@ func init() {
 }
 
 func Check(val any) error {
-	if err := validate.Struct(val); err != nil {
+	err := validate.Struct(val)
+	if err != nil {
 
 		verrors, ok := err.(validator.ValidationErrors)
 		if !ok {
