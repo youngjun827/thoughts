@@ -82,13 +82,12 @@ func (h *Handlers) QueryByPostID(ctx context.Context, w http.ResponseWriter, r *
 		return response.NewError(errors.New("post_id not found in URL"), http.StatusBadRequest)
 	}
 
-	// Convert the postIDStr to a UUID
 	postID, err := uuid.Parse(postIDStr)
 	if err != nil {
 		return response.NewError(errors.New("invalid post_id"), http.StatusBadRequest)
 	}
 
-	usr, err := h.blog.QueryByPostID(ctx, postID)
+	blg, err := h.blog.QueryByPostID(ctx, postID)
 	if err != nil {
 		switch {
 		case errors.Is(err, blog.ErrNotFound):
@@ -98,5 +97,5 @@ func (h *Handlers) QueryByPostID(ctx context.Context, w http.ResponseWriter, r *
 		}
 	}
 
-	return web.Respond(ctx, w, toAppBlog(usr), http.StatusOK)
+	return web.Respond(ctx, w, toAppBlog(blg), http.StatusOK)
 }

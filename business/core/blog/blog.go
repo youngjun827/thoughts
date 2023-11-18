@@ -59,12 +59,12 @@ func (c *Core) Create(ctx context.Context, nb NewBlog) (Blog, error) {
 }
 
 func (c *Core) Query(ctx context.Context, filter QueryFilter, orderBy order.By, pageNumber int, rowsPerPage int) ([]Blog, error) {
-	users, err := c.storer.Query(ctx, filter, orderBy, pageNumber, rowsPerPage)
+	blogs, err := c.storer.Query(ctx, filter, orderBy, pageNumber, rowsPerPage)
 	if err != nil {
 		return nil, fmt.Errorf("query: %w", err)
 	}
 
-	return users, nil
+	return blogs, nil
 }
 
 func (c *Core) Count(ctx context.Context, filter QueryFilter) (int, error) {
@@ -74,7 +74,7 @@ func (c *Core) Count(ctx context.Context, filter QueryFilter) (int, error) {
 func (c *Core) QueryByPostID(ctx context.Context, postID uuid.UUID) (Blog, error) {
 	blog, err := c.storer.QueryByPostID(ctx, postID)
 	if err != nil {
-		return Blog{}, fmt.Errorf("query: userID[%s]: %w", postID, err)
+		return Blog{}, fmt.Errorf("query: postID[%s]: %w", postID, err)
 	}
 
 	return blog, nil
