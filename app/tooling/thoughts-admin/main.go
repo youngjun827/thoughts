@@ -12,7 +12,6 @@ import (
 	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
 )
 
-
 func main() {
 	err := migrateSeed()
 

@@ -23,7 +23,7 @@ func New(blog *blog.Core) *Handlers {
 
 func (h *Handlers) Create(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	var app AppNewBlog
-	
+
 	err := web.Decode(r, &app)
 	if err != nil {
 		return response.NewError(err, http.StatusBadRequest)

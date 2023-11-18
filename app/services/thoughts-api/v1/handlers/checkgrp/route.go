@@ -9,9 +9,9 @@ import (
 )
 
 type Config struct {
-	Build 		string
-	Log 		*logger.Logger
-	DB 			*sqlx.DB
+	Build string
+	Log   *logger.Logger
+	DB    *sqlx.DB
 }
 
 func Routes(app *web.App, cfg Config) {

@@ -15,15 +15,15 @@ import (
 
 type Handlers struct {
 	build string
-	log *logger.Logger
-	db *sqlx.DB
+	log   *logger.Logger
+	db    *sqlx.DB
 }
 
 func New(build string, log *logger.Logger, db *sqlx.DB) *Handlers {
 	return &Handlers{
 		build: build,
-		log: log,
-		db: db,
+		log:   log,
+		db:    db,
 	}
 }
 

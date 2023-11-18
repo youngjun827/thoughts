@@ -8,25 +8,24 @@ import (
 )
 
 type dbBlog struct {
-	PostID       uuid.UUID `db:"post_id"`
-	Title        string    `db:"title"`
-	Content      string    `db:"content"`
-	Category     string    `db:"category"`
-	Enabled      bool      `db:"enabled"`
-	DateCreated  time.Time `db:"date_created"`
-	DateUpdated  time.Time `db:"date_updated"`
+	PostID      uuid.UUID `db:"post_id"`
+	Title       string    `db:"title"`
+	Content     string    `db:"content"`
+	Category    string    `db:"category"`
+	Enabled     bool      `db:"enabled"`
+	DateCreated time.Time `db:"date_created"`
+	DateUpdated time.Time `db:"date_updated"`
 }
-
 
 func toDBBlog(blog blog.Blog) dbBlog {
 	return dbBlog{
-		PostID:       blog.PostID,
-		Title:        blog.Title,
-		Content:      blog.Content,
-		Category:     blog.Category,
-		Enabled:      blog.Enabled,
-		DateCreated:  blog.DateCreated.UTC(),
-		DateUpdated:  blog.DateUpdated.UTC(),
+		PostID:      blog.PostID,
+		Title:       blog.Title,
+		Content:     blog.Content,
+		Category:    blog.Category,
+		Enabled:     blog.Enabled,
+		DateCreated: blog.DateCreated.UTC(),
+		DateUpdated: blog.DateUpdated.UTC(),
 	}
 }
 

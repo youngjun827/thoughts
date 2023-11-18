@@ -11,25 +11,25 @@ import (
 )
 
 const (
-	ASC = "ASC"
+	ASC  = "ASC"
 	DESC = "DESC"
 )
 
-var directions = map[string]string {
-	ASC: "ASC",
+var directions = map[string]string{
+	ASC:  "ASC",
 	DESC: "DESC",
 }
 
 // =============================================================================
 
 type By struct {
-	Field 		string
-	Direction	string
+	Field     string
+	Direction string
 }
 
 func NewBy(field string, direction string) By {
 	return By{
-		Field: field,
+		Field:     field,
 		Direction: direction,
 	}
 }

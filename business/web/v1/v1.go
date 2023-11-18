@@ -14,7 +14,7 @@ type APIMuxConfig struct {
 	Build    string
 	Shutdown chan os.Signal
 	Log      *logger.Logger
-	DB 		 *sqlx.DB
+	DB       *sqlx.DB
 }
 type RouteAdder interface {
 	Add(app *web.App, cfg APIMuxConfig)

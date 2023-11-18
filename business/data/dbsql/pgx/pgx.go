@@ -16,12 +16,10 @@ import (
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
-
 const (
 	uniqueViolation = "23505"
 	undefinedTable  = "42P01"
 )
-
 
 var (
 	ErrDBNotFound        = sql.ErrNoRows

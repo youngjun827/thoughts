@@ -8,24 +8,24 @@ import (
 )
 
 type AppBlog struct {
-	PostID          string   `json:"post_id"`
-	Title         	string   `json:"title"`
-	Content       	string   `json:"content"`
-	Category        string 	 `json:"category"`
-	Enabled    	    bool     `json:"enabled"`
-	DateCreated  	string   `json:"dateCreated"`
-	DateUpdated  	string   `json:"dateUpdated"`
+	PostID      string `json:"post_id"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	Category    string `json:"category"`
+	Enabled     bool   `json:"enabled"`
+	DateCreated string `json:"dateCreated"`
+	DateUpdated string `json:"dateUpdated"`
 }
 
 func toAppBlog(blog blog.Blog) AppBlog {
 	return AppBlog{
-		PostID:       blog.PostID.String(),
-		Title:        blog.Title,
-		Content:      blog.Content,
-		Category:     blog.Category,
-		Enabled:      blog.Enabled,
-		DateCreated:  blog.DateCreated.Format(time.RFC3339),
-		DateUpdated:  blog.DateUpdated.Format(time.RFC3339),
+		PostID:      blog.PostID.String(),
+		Title:       blog.Title,
+		Content:     blog.Content,
+		Category:    blog.Category,
+		Enabled:     blog.Enabled,
+		DateCreated: blog.DateCreated.Format(time.RFC3339),
+		DateUpdated: blog.DateUpdated.Format(time.RFC3339),
 	}
 }
 
@@ -43,16 +43,16 @@ func toAppBlogs(blogs []blog.Blog) []AppBlog {
 // =============================================================================
 
 type AppNewBlog struct {
-	Title         	string   `json:"title" validate:"required"`
-	Content       	string   `json:"content" validate:"required"`
-	Category        string 	 `json:"category" validate:"required"`
+	Title    string `json:"title" validate:"required"`
+	Content  string `json:"content" validate:"required"`
+	Category string `json:"category" validate:"required"`
 }
 
 func toCoreNewBlog(app AppNewBlog) (blog.NewBlog, error) {
 	blog := blog.NewBlog{
-		Title:            app.Title,
-		Content:          app.Content,
-		Category:         app.Category,
+		Title:    app.Title,
+		Content:  app.Content,
+		Category: app.Category,
 	}
 
 	return blog, nil

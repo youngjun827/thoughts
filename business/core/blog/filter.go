@@ -9,12 +9,12 @@ import (
 )
 
 type QueryFilter struct {
-	PostID				*uuid.UUID
-	Title				*string
-	Content				*string
-	Category			*string
-	StartCreatedDate	*time.Time
-	EndCreatedDate		*time.Time
+	PostID           *uuid.UUID
+	Title            *string
+	Content          *string
+	Category         *string
+	StartCreatedDate *time.Time
+	EndCreatedDate   *time.Time
 }
 
 func (qf *QueryFilter) Validate() error {

@@ -15,11 +15,10 @@ func (Routes) Add(app *web.App, apiCfg v1.APIMuxConfig) {
 	hackgrp.Routes(app)
 
 	checkgrp.Routes(app, checkgrp.Config{
-		Build: 	apiCfg.Build,
-		Log: 	apiCfg.Log,
-		DB: 	apiCfg.DB,
+		Build: apiCfg.Build,
+		Log:   apiCfg.Log,
+		DB:    apiCfg.DB,
 	})
-
 
 	bloggrp.Routes(app, bloggrp.Config{
 		Build: apiCfg.Build,

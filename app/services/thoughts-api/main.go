@@ -155,7 +155,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 		Build:    build,
 		Shutdown: shutdown,
 		Log:      log,
-		DB:		  db,
+		DB:       db,
 	}
 
 	apiMux := v1.APIMux(cfgMux, handlers.Routes{})
