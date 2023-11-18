@@ -7,7 +7,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/youngjun827/thoughts/business/core/blog"
-	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
+	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
@@ -29,8 +29,6 @@ func (s *Store) Create(ctx context.Context, blog blog.Blog) error {
 		(post_id, title, content, category, enabled, date_created, date_updated)
 	VALUES
 		(:post_id, :title, :content, :category, :enabled, :date_created, :date_updated)`
-
-	fmt.Println(s.db.Rebind(q), toDBBlog(blog))
 
 	err := db.NamedExecContext(ctx, s.log, s.db, q, toDBBlog(blog))
 	if err != nil {

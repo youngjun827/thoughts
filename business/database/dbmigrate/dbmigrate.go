@@ -12,7 +12,7 @@ import (
 	"github.com/ardanlabs/darwin/v3/dialects/postgres"
 	"github.com/ardanlabs/darwin/v3/drivers/generic"
 	"github.com/jmoiron/sqlx"
-	database "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
+	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
 )
 
 var (
@@ -23,13 +23,13 @@ var (
 	seedDoc string
 )
 
-func Migrate(ctx context.Context, db *sqlx.DB) error {
-	err := database.StatusCheck(ctx, db)
+func Migrate(ctx context.Context, sqldb *sqlx.DB) error {
+	err := db.StatusCheck(ctx, sqldb)
 	if err != nil {
 		return fmt.Errorf("status check database: %w", err)
 	}
 
-	driver, err := generic.New(db.DB, postgres.Dialect{})
+	driver, err := generic.New(sqldb.DB, postgres.Dialect{})
 	if err != nil {
 		return fmt.Errorf("construct darwin driver: %w", err)
 	}
@@ -38,13 +38,13 @@ func Migrate(ctx context.Context, db *sqlx.DB) error {
 	return d.Migrate()
 }
 
-func Seed(ctx context.Context, db *sqlx.DB) (err error) {
-	err = database.StatusCheck(ctx, db)
+func Seed(ctx context.Context, sqldb *sqlx.DB) (err error) {
+	err = db.StatusCheck(ctx, sqldb)
 	if err != nil {
 		return fmt.Errorf("status check database: %w", err)
 	}
 
-	tx, err := db.Begin()
+	tx, err := sqldb.Begin()
 	if err != nil {
 		return err
 	}

@@ -14,7 +14,7 @@ import (
 
 	"github.com/ardanlabs/conf/v3"
 	"github.com/youngjun827/thoughts/app/services/thoughts-api/v1/handlers"
-	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
+	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
 	v1 "github.com/youngjun827/thoughts/business/web/v1"
 	"github.com/youngjun827/thoughts/business/web/v1/debug"
 	"github.com/youngjun827/thoughts/foundation/logger"

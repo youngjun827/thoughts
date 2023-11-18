@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
+	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
 	"github.com/youngjun827/thoughts/foundation/logger"
 	"github.com/youngjun827/thoughts/foundation/web"
 )

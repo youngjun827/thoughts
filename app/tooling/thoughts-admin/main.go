@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
-	"github.com/youngjun827/thoughts/business/data/dbmigrate"
-	db "github.com/youngjun827/thoughts/business/data/dbsql/pgx"
+	"github.com/youngjun827/thoughts/business/database/dbmigrate"
+	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
 )
 
 func main() {
