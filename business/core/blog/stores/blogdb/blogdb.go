@@ -4,8 +4,10 @@ package blogdb
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/youngjun827/thoughts/business/core/blog"
 	db "github.com/youngjun827/thoughts/business/database/dbsql/pgx"
@@ -97,4 +99,36 @@ func (s *Store) Count(ctx context.Context, filter blog.QueryFilter) (int, error)
 	}
 
 	return count.Count, nil
+}
+
+func (s *Store) QueryByPostID(ctx context.Context, postID uuid.UUID) (blog.Blog, error) {
+	data := struct {
+		ID string `db:"post_id"`
+	}{
+		ID: postID.String(),
+	}
+
+	const q = `
+	SELECT
+		post_id, title, content, category, enabled, date_created, date_updated
+	FROM
+		blog_posts
+	WHERE 
+		post_id = :post_id`
+
+	
+	var dbBlg dbBlog
+	if err := db.NamedQueryStruct(ctx, s.log, s.db, q, data, &dbBlg); err != nil {
+		if errors.Is(err, db.ErrDBNotFound) {
+			return blog.Blog{}, fmt.Errorf("namedquerystruct: %w", blog.ErrNotFound)
+		}
+		return blog.Blog{}, fmt.Errorf("namedquerystruct: %w", err)
+	}
+
+	blg, err := toCoreBlog(dbBlg)
+	if err != nil {
+		return blog.Blog{}, err
+	}
+
+	return blg, nil
 }

@@ -25,6 +25,9 @@ curl-create:
 curl-get:
 	curl http://localhost:3000/v1/blogs | jq .
 
+curl-get-postid:
+	curl http://localhost:3000/v1/blogs/1a4302e9-97a1-4e8a-ba02-0c5e36e8f212 | jq .
+
 # ==============================================================================
 # Define dependencies
 

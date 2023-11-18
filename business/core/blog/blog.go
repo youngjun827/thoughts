@@ -3,6 +3,7 @@ package blog
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,10 +12,15 @@ import (
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
+var (
+	ErrNotFound              = errors.New("blog not found")
+)
+
 type Storer interface {
 	Create(ctx context.Context, blog Blog) error
 	Query(ctx context.Context, filter QueryFilter, orderBy order.By, pageNumber int, rowsPerPage int) ([]Blog, error)
 	Count(ctx context.Context, filter QueryFilter) (int, error)
+	QueryByPostID(ctx context.Context, postID uuid.UUID) (Blog, error)
 }
 
 // =============================================================================
@@ -63,4 +69,13 @@ func (c *Core) Query(ctx context.Context, filter QueryFilter, orderBy order.By, 
 
 func (c *Core) Count(ctx context.Context, filter QueryFilter) (int, error) {
 	return c.storer.Count(ctx, filter)
+}
+
+func (c *Core) QueryByPostID(ctx context.Context, postID uuid.UUID) (Blog, error) {
+	blog, err := c.storer.QueryByPostID(ctx, postID)
+	if err != nil {
+		return Blog{}, fmt.Errorf("query: userID[%s]: %w", postID, err)
+	}
+
+	return blog, nil
 }

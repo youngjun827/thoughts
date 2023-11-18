@@ -3,9 +3,12 @@ package bloggrp
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/youngjun827/thoughts/business/core/blog"
 	"github.com/youngjun827/thoughts/business/database/page"
 	"github.com/youngjun827/thoughts/business/web/v1/response"
@@ -70,4 +73,30 @@ func (h *Handlers) Query(ctx context.Context, w http.ResponseWriter, r *http.Req
 	}
 
 	return web.Respond(ctx, w, response.NewPageDocument(toAppBlogs(blogs), total, page.Number, page.RowsPerPage), http.StatusOK)
+}
+
+
+func (h *Handlers) QueryByPostID(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	postIDStr := chi.URLParam(r, "post_id")
+	if postIDStr == "" {
+		return response.NewError(errors.New("post_id not found in URL"), http.StatusBadRequest)
+	}
+
+	// Convert the postIDStr to a UUID
+	postID, err := uuid.Parse(postIDStr)
+	if err != nil {
+		return response.NewError(errors.New("invalid post_id"), http.StatusBadRequest)
+	}
+
+	usr, err := h.blog.QueryByPostID(ctx, postID)
+	if err != nil {
+		switch {
+		case errors.Is(err, blog.ErrNotFound):
+			return response.NewError(err, http.StatusNotFound)
+		default:
+			return fmt.Errorf("querybyid: id[%s]: %w", postID, err)
+		}
+	}
+
+	return web.Respond(ctx, w, toAppBlog(usr), http.StatusOK)
 }
