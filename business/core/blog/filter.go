@@ -45,8 +45,3 @@ func (qf *QueryFilter) WithStartDateCreated(startDate time.Time) {
 	d := startDate.UTC()
 	qf.StartCreatedDate = &d
 }
-
-func (qf *QueryFilter) WithEndCreatedDate(endDate time.Time) {
-	d := endDate.UTC()
-	qf.EndCreatedDate = &d
-}

@@ -20,8 +20,10 @@ live:
 	curl -il http://localhost:3000/v1/liveness
 
 curl-create:
-	curl -il -X POST -H 'Content-Type: application/json' -d '{"title":"Please Work Title","content":"Please Work Content","category":"Database"}' http://localhost:3000/v1/blogs
+	curl -X POST -H 'Content-Type: application/json' -d '{"title":"Please Work Title","content":"Please Work Content","category":"Database"}' http://localhost:3000/v1/blogs | jq .
 
+curl-get:
+	curl http://localhost:3000/v1/blogs | jq .
 
 # ==============================================================================
 # Define dependencies

@@ -7,11 +7,14 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/youngjun827/thoughts/business/database/order"
 	"github.com/youngjun827/thoughts/foundation/logger"
 )
 
 type Storer interface {
 	Create(ctx context.Context, blog Blog) error
+	Query(ctx context.Context, filter QueryFilter, orderBy order.By, pageNumber int, rowsPerPage int) ([]Blog, error)
+	Count(ctx context.Context, filter QueryFilter) (int, error) 
 }
 
 // =============================================================================
@@ -47,4 +50,19 @@ func (c *Core) Create(ctx context.Context, nb NewBlog) (Blog, error) {
 	}
 
 	return blog, nil
+}
+
+// Query retrieves a list of existing blogs.
+func (c *Core) Query(ctx context.Context, filter QueryFilter, orderBy order.By, pageNumber int, rowsPerPage int) ([]Blog, error) {
+	users, err := c.storer.Query(ctx, filter, orderBy, pageNumber, rowsPerPage)
+	if err != nil {
+		return nil, fmt.Errorf("query: %w", err)
+	}
+
+	return users, nil
+}
+
+// Count returns the total number of users.
+func (c *Core) Count(ctx context.Context, filter QueryFilter) (int, error) {
+	return c.storer.Count(ctx, filter)
 }

@@ -23,4 +23,5 @@ func Routes(app *web.App, cfg Config) {
 
 	hdl := New(blgCore)
 	app.Handle(http.MethodPost, version, "/blogs", hdl.Create)
+	app.Handle(http.MethodGet, version, "/blogs", hdl.Query)
 }

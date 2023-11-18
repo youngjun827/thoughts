@@ -29,7 +29,7 @@ func toDBBlog(blog blog.Blog) dbBlog {
 	}
 }
 
-/*
+
 func toCoreBlog(dbBlog dbBlog) (blog.Blog, error) {
 	blog := blog.Blog{
 		PostID:			dbBlog.PostID,
@@ -55,4 +55,3 @@ func toCoreBlogSlice(dbBlogs []dbBlog) ([]blog.Blog, error) {
 	}
 	return blogs, nil
 }
-*/
