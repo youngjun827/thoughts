@@ -23,7 +23,7 @@ jobs:
         run: |
           docker buildx create --use
           docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t your-docker-registry/thoughts-api:latest -f operations/docker/dockerfile.service .
+          docker buildx build --platform linux/amd64,linux/arm64 -t thoughts/thoughts-api:latest -f operations/docker/dockerfile.service .
 
       - name: Create PersistentVolume and PersistentVolumeClaim
         run: |
