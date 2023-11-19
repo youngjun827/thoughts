@@ -24,6 +24,7 @@ jobs:
           docker buildx create --use
           docker buildx inspect --bootstrap
           docker buildx build --platform linux/amd64,linux/arm64 -t thoughts/thoughts-api:latest -f operations/docker/dockerfile.service .
+          docker push your-docker-registry/thoughts-api:latest
 
       - name: Create PersistentVolume and PersistentVolumeClaim
         run: |
@@ -56,9 +57,9 @@ jobs:
         run: docker pull your-docker-registry/thoughts-api:latest
 
       - name: Set up kind
-        uses: ovotech/kind-action@v1
-        with:
-          version: v0.11.1
+        run: |
+          docker pull kindest/node:v1.27.3
+          kind create cluster --name kind-cluster --image kindest/node:v1.27.3 --config operations/k8s/dev/kind-config.yaml
 
       - name: Load Docker Images into kind
         run: kind load docker-image your-docker-registry/thoughts-api:latest --name kind-cluster
